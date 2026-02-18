@@ -78,7 +78,12 @@ struct ContentView: View {
                         )
                         .shadow(color: currentTheme.activeColor.opacity(0.3), radius: 5)
                     }
-                    .padding(.bottom, 30)
+                    .padding(.bottom, 10)
+                    
+                    Text("© 2026 Frode Halrynjo")
+                                            .font(.caption) // Liten skrift
+                                            .foregroundColor(currentTheme.textColor.opacity(0.7)) // Diskret farge
+                                            .padding(.bottom, 20) // Litt luft i bunnen av skjermen
                 }
             }
             .transition(.opacity)
