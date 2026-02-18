@@ -44,7 +44,7 @@ struct UnifiedGameView: View {
                         Button(action: onBack) {
                             HStack(spacing: 5) {
                                 Image(systemName: "chevron.left")
-                                Text("MENU")
+                                Text("MENY")
                             }
                             .font(.system(size: 16, weight: .bold, design: .monospaced))
                             .foregroundColor(currentTheme.activeColor)
@@ -147,7 +147,7 @@ struct UnifiedGameView: View {
                     .foregroundColor(currentTheme.activeColor)
             } else {
                 // Training Mode Utseende
-                Text("TRAINING MODULE \(engine.currentLevel.id)")
+                Text("TRENINGSMODUL \(engine.currentLevel.id)")
                     .font(.system(size: 14, weight: .bold, design: .monospaced))
                     .foregroundColor(currentTheme.textColor.opacity(0.8))
                 

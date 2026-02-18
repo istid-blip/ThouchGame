@@ -36,7 +36,7 @@ struct StoryModeView: View {
                         Button(action: onBack) {
                             HStack(spacing: 5) {
                                 Image(systemName: "chevron.left")
-                                Text("MENU")
+                                Text("MENY")
                             }
                             .font(.system(size: 16, weight: .bold, design: .monospaced))
                             .foregroundColor(currentTheme.activeColor)

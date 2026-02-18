@@ -34,7 +34,7 @@ struct ContentView: View {
                             .font(.system(size: 40, weight: .black, design: currentTheme.fontDesign))
                             .foregroundColor(currentTheme.activeColor)
                             .shadow(color: currentTheme.activeColor.opacity(0.5), radius: 10)
-                        Text("SELECT MODE")
+                        Text("VELG MODE")
                             .font(.headline)
                             .tracking(4)
                             .foregroundColor(currentTheme.textColor.opacity(0.7))
@@ -42,13 +42,13 @@ struct ContentView: View {
                     .padding(.top, 50)
                     
                     VStack(spacing: 20) {
-                        MenuButton(title: "TRAINING", icon: "keyboard", theme: currentTheme) {
+                        MenuButton(title: "TRENING", icon: "keyboard", theme: currentTheme) {
                             withAnimation { selectedMode = .training }
                         }
                         MenuButton(title: "STORY MODE", icon: "book.closed.fill", theme: currentTheme) {
                             withAnimation { selectedMode = .story }
                         }
-                        MenuButton(title: "CONNECT KEYBOARD", icon: "cable.connector", theme: currentTheme) {
+                        MenuButton(title: "KOBLE TIL TASTATUR", icon: "cable.connector", theme: currentTheme) {
                             withAnimation { selectedMode = .help }
                         }
                     }
@@ -59,7 +59,7 @@ struct ContentView: View {
                     Button(action: toggleTheme) {
                         HStack {
                             Image(systemName: "paintpalette.fill")
-                            Text("THEME: \(currentTheme.id.uppercased())")
+                            Text("TEMA: \(currentTheme.id.uppercased())")
                                 .fontWeight(.bold)
                         }
                         .padding(.vertical, 12)

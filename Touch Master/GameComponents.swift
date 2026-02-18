@@ -47,7 +47,7 @@ struct LevelCompleteView: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            Text("COMPLETE!")
+            Text("FERDIG!")
                 .font(.title)
                 .foregroundColor(theme.activeColor)
                 .padding()
@@ -60,7 +60,7 @@ struct LevelCompleteView: View {
                     Text("\(wpm)")
                         .font(.system(size: 40, weight: .bold, design: .monospaced))
                         .foregroundColor(.white)
-                    Text("WPM")
+                    Text("OPM")
                         .font(.caption)
                         .foregroundColor(.gray)
                 }
@@ -69,7 +69,7 @@ struct LevelCompleteView: View {
                     Text("\(accuracy)%")
                         .font(.system(size: 40, weight: .bold, design: .monospaced))
                         .foregroundColor(accuracy > 90 ? .green : .orange)
-                    Text("ACCURACY")
+                    Text("NØYAKTIGHET")
                         .font(.caption)
                         .foregroundColor(.gray)
                 }
@@ -87,7 +87,7 @@ struct LevelCompleteView: View {
                         .foregroundColor(theme.textColor)
                 }
                 
-                Button("CONTINUE") { onNext() }
+                Button("FORTSETT") { onNext() }
                     .font(.headline)
                     .padding()
                     .background(theme.activeColor)
