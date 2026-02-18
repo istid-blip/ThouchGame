@@ -32,7 +32,7 @@ struct ConnectionHelpView: View {
                         .foregroundColor(theme.activeColor)
                         .padding(.bottom, 10)
                     
-                    Text("CONNECT KEYBOARD")
+                    Text("KOBLE TASTATUR")
                         .font(.system(size: 30, weight: .heavy, design: theme.fontDesign))
                         .foregroundColor(theme.textColor)
                         .multilineTextAlignment(.center)
