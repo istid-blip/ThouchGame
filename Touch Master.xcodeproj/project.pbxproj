@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		CA9210B12F438829005B99EB /* TouchGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TouchGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA9210B12F438829005B99EB /* Touch Master.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Touch Master.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		CA9210B32F438829005B99EB /* TouchGame */ = {
+		CA9210B32F438829005B99EB /* Touch Master */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = TouchGame;
+			path = "Touch Master";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -32,7 +32,7 @@
 		CA9210A82F438829005B99EB = {
 			isa = PBXGroup;
 			children = (
-				CA9210B32F438829005B99EB /* TouchGame */,
+				CA9210B32F438829005B99EB /* Touch Master */,
 				CA9210B22F438829005B99EB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -40,7 +40,7 @@
 		CA9210B22F438829005B99EB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CA9210B12F438829005B99EB /* TouchGame.app */,
+				CA9210B12F438829005B99EB /* Touch Master.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,9 +48,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		CA9210B02F438829005B99EB /* TouchGame */ = {
+		CA9210B02F438829005B99EB /* Touch Master */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CA9210BE2F43882C005B99EB /* Build configuration list for PBXNativeTarget "TouchGame" */;
+			buildConfigurationList = CA9210BE2F43882C005B99EB /* Build configuration list for PBXNativeTarget "Touch Master" */;
 			buildPhases = (
 				CA9210AD2F438829005B99EB /* Sources */,
 				CA9210AE2F438829005B99EB /* Frameworks */,
@@ -61,13 +61,13 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				CA9210B32F438829005B99EB /* TouchGame */,
+				CA9210B32F438829005B99EB /* Touch Master */,
 			);
-			name = TouchGame;
+			name = "Touch Master";
 			packageProductDependencies = (
 			);
 			productName = ThouchGame;
-			productReference = CA9210B12F438829005B99EB /* TouchGame.app */;
+			productReference = CA9210B12F438829005B99EB /* Touch Master.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -85,7 +85,7 @@
 					};
 				};
 			};
-			buildConfigurationList = CA9210AC2F438829005B99EB /* Build configuration list for PBXProject "TouchGame" */;
+			buildConfigurationList = CA9210AC2F438829005B99EB /* Build configuration list for PBXProject "Touch Master" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -99,7 +99,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				CA9210B02F438829005B99EB /* TouchGame */,
+				CA9210B02F438829005B99EB /* Touch Master */,
 			);
 		};
 /* End PBXProject section */
@@ -315,7 +315,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		CA9210AC2F438829005B99EB /* Build configuration list for PBXProject "TouchGame" */ = {
+		CA9210AC2F438829005B99EB /* Build configuration list for PBXProject "Touch Master" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CA9210BC2F43882C005B99EB /* Debug */,
@@ -324,7 +324,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CA9210BE2F43882C005B99EB /* Build configuration list for PBXNativeTarget "TouchGame" */ = {
+		CA9210BE2F43882C005B99EB /* Build configuration list for PBXNativeTarget "Touch Master" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CA9210BF2F43882C005B99EB /* Debug */,
