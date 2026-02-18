@@ -82,7 +82,13 @@ struct TrainingView: View {
                     TypingAreaView(engine: engine, theme: currentTheme, geometry: geometry, isPhone: isPhone)
                     
                     if engine.isCompleted {
-                        LevelCompleteView(theme: currentTheme, onReset: engine.reset, onNext: engine.nextLevel)
+                        LevelCompleteView(
+                            theme: currentTheme,
+                            wpm: engine.wpm,           // Send med WPM
+                            accuracy: engine.accuracy, // Send med Accuracy
+                            onReset: engine.reset,
+                            onNext: engine.nextLevel
+                        )
                     }
 
                     Spacer()

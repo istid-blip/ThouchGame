@@ -38,17 +38,45 @@ struct CoinCounterView: View {
 
 struct LevelCompleteView: View {
     let theme: AppTheme
+    // NYE PARAMETERE
+    let wpm: Int
+    let accuracy: Int
+    
     let onReset: () -> Void
     let onNext: () -> Void
     
     var body: some View {
-        VStack {
+        VStack(spacing: 20) {
             Text("COMPLETE!")
                 .font(.title)
                 .foregroundColor(theme.activeColor)
                 .padding()
                 .background(Color.black.opacity(0.8).cornerRadius(10))
                 .overlay(RoundedRectangle(cornerRadius: 10).stroke(theme.activeColor, lineWidth: 2))
+            
+            // NY STATISTIKK-VISNING
+            HStack(spacing: 30) {
+                VStack {
+                    Text("\(wpm)")
+                        .font(.system(size: 40, weight: .bold, design: .monospaced))
+                        .foregroundColor(.white)
+                    Text("WPM")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                }
+                
+                VStack {
+                    Text("\(accuracy)%")
+                        .font(.system(size: 40, weight: .bold, design: .monospaced))
+                        .foregroundColor(accuracy > 90 ? .green : .orange)
+                    Text("ACCURACY")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                }
+            }
+            .padding()
+            .background(Color.black.opacity(0.6))
+            .cornerRadius(15)
             
             HStack(spacing: 20) {
                 Button(action: onReset) {
@@ -66,8 +94,8 @@ struct LevelCompleteView: View {
                     .foregroundColor(theme.id == "cyber" || theme.id == "matrix" ? .black : .white)
                     .cornerRadius(8)
             }
-            .padding(.top, 20)
         }
+        .padding() // Litt ekstra luft rundt hele boksen
     }
 }
 

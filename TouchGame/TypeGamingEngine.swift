@@ -1,9 +1,3 @@
-//
-//  TypeGamingEngine.swift
-//  TouchGame
-//
-//  Created by Frode Halrynjo on 18/02/2026.
-//
 import SwiftUI
 import Combine
 
@@ -42,7 +36,6 @@ class TypingGameEngine: ObservableObject {
     
     @Published var storyLevels: [Level] = []
     
-    // Hvilken modus spiller vi?
     let mode: GameMode
     
     @Published var currentLevelIndex: Int {
@@ -57,10 +50,15 @@ class TypingGameEngine: ObservableObject {
     @Published var isCompleted = false
     @Published var shakeTrigger = false
     
-    // Init tar nå inn hvilken modus vi vil ha
+    // --- STATISTIKK VARIABLER ---
+    @Published var wpm: Int = 0
+    @Published var accuracy: Int = 100
+    
+    private var startTime: Date?
+    private var totalKeystrokes: Int = 0
+    
     init(mode: GameMode, themeId: String = "cyber") {
         self.mode = mode
-        // Vi lagrer progress separat for story og training
         self.currentLevelIndex = UserDefaults.standard.integer(forKey: "SavedLevelIndex_\(mode)")
         self.coins = UserDefaults.standard.integer(forKey: "SavedCoins")
         self.updateStoryTheme(id: themeId)
@@ -69,7 +67,6 @@ class TypingGameEngine: ObservableObject {
     func updateStoryTheme(id: String) {
         if mode == .story {
             self.storyLevels = StoryData.getLevels(for: id)
-            // Tilbakestill hvis level-indexen er utenfor rekkevidde for den nye historien
             if currentLevelIndex >= storyLevels.count {
                 currentLevelIndex = 0
                 reset()
@@ -97,6 +94,14 @@ class TypingGameEngine: ObservableObject {
     func checkInput(_ key: String) {
         guard currentIndex < targetText.count else { return }
         
+        // --- 1. START KLOKKEN HVIS DEN IKKE ER STARTET ---
+        if startTime == nil {
+            startTime = Date()
+        }
+        
+        // --- 2. TELL ALLE TASTETRYKK (FOR NØYAKTIGHET) ---
+        totalKeystrokes += 1
+        
         let targetChar = String(Array(targetText)[currentIndex])
         let inputMatchesEnter = (key == "\n" && targetChar == "\n")
         
@@ -105,11 +110,32 @@ class TypingGameEngine: ObservableObject {
             withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
                 currentIndex += 1
             }
+            // Sjekk om ferdig
             if currentIndex == targetText.count {
+                calculateStats() // <--- VIKTIG: REGN UT FØR VI SIER FERDIG
                 isCompleted = true
             }
         } else {
             withAnimation(.default) { shakeTrigger.toggle() }
+        }
+    }
+    
+    private func calculateStats() {
+        guard let start = startTime else { return }
+        let timeElapsed = Date().timeIntervalSince(start)
+        
+        // WPM: (Antall tegn / 5) / minutter
+        let minutes = timeElapsed / 60.0
+        let words = Double(targetText.count) / 5.0
+        
+        if minutes > 0 {
+            self.wpm = Int(words / minutes)
+        }
+        
+        // Accuracy
+        if totalKeystrokes > 0 {
+            let acc = (Double(targetText.count) / Double(totalKeystrokes)) * 100
+            self.accuracy = Int(acc)
         }
     }
     
@@ -125,5 +151,10 @@ class TypingGameEngine: ObservableObject {
     func reset() {
         currentIndex = 0
         isCompleted = false
+        // --- NULLSTILL STATISTIKK ---
+        startTime = nil
+        totalKeystrokes = 0
+        wpm = 0
+        accuracy = 100
     }
 }

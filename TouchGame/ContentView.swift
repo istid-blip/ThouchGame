@@ -11,10 +11,15 @@ struct ContentView: View {
     var body: some View {
         if let mode = selectedMode {
             switch mode {
-            case .training:
-                TrainingView(currentTheme: currentTheme, onBack: { selectedMode = nil })
-            case .story:
-                StoryModeView(currentTheme: currentTheme, onBack: { selectedMode = nil })
+            case .training, .story:
+                            // HER ER ENDRINGEN:
+                            // Både story og training bruker nå samme UnifiedGameView.
+                            // Vi sender med 'mode' variablen så visningen vet hva den skal vise.
+                            UnifiedGameView(
+                                mode: mode,
+                                theme: currentTheme,
+                                onBack: { selectedMode = nil }
+                            )
             case .help: //
                             ConnectionHelpView(theme: currentTheme, onBack: { selectedMode = nil })
                         }
