@@ -54,6 +54,10 @@ class TypingGameEngine: ObservableObject {
     @Published var wpm: Int = 0
     @Published var accuracy: Int = 100
     
+    // NYE VARIABLER FOR BONUS
+        @Published var bonusCoinsWPM: Int = 0
+        @Published var bonusCoinsAccuracy: Int = 0
+    
     private var startTime: Date?
     private var totalKeystrokes: Int = 0
     
@@ -121,23 +125,40 @@ class TypingGameEngine: ObservableObject {
     }
     
     private func calculateStats() {
-        guard let start = startTime else { return }
-        let timeElapsed = Date().timeIntervalSince(start)
-        
-        // WPM: (Antall tegn / 5) / minutter
-        let minutes = timeElapsed / 60.0
-        let words = Double(targetText.count) / 5.0
-        
-        if minutes > 0 {
-            self.wpm = Int(words / minutes)
+            guard let start = startTime else { return }
+            let timeElapsed = Date().timeIntervalSince(start)
+            
+            // WPM: (Antall tegn / 5) / minutter
+            let minutes = timeElapsed / 60.0
+            let words = Double(targetText.count) / 5.0
+            
+            if minutes > 0 {
+                self.wpm = Int(words / minutes)
+            }
+            
+            // Accuracy
+            if totalKeystrokes > 0 {
+                let acc = (Double(targetText.count) / Double(totalKeystrokes)) * 100
+                self.accuracy = Int(acc)
+            }
+            
+            // --- BEREGN BONUS MYNTER ---
+            var wpmBonus = 0
+            if self.wpm > 60 { wpmBonus = 30 }
+            else if self.wpm > 40 { wpmBonus = 20 }
+            else if self.wpm > 20 { wpmBonus = 10 }
+            
+            var accBonus = 0
+            if self.accuracy == 100 { accBonus = 50 }
+            else if self.accuracy >= 95 { accBonus = 25 }
+            else if self.accuracy >= 90 { accBonus = 10 }
+            
+            self.bonusCoinsWPM = wpmBonus
+            self.bonusCoinsAccuracy = accBonus
+            
+            // Legg til bonus i total-økonomien
+            self.coins += (wpmBonus + accBonus)
         }
-        
-        // Accuracy
-        if totalKeystrokes > 0 {
-            let acc = (Double(targetText.count) / Double(totalKeystrokes)) * 100
-            self.accuracy = Int(acc)
-        }
-    }
     
     func nextLevel() {
         if currentLevelIndex < activeLevels.count - 1 {
@@ -149,12 +170,16 @@ class TypingGameEngine: ObservableObject {
     }
     
     func reset() {
-        currentIndex = 0
-        isCompleted = false
-        // --- NULLSTILL STATISTIKK ---
-        startTime = nil
-        totalKeystrokes = 0
-        wpm = 0
-        accuracy = 100
-    }
+            currentIndex = 0
+            isCompleted = false
+            // --- NULLSTILL STATISTIKK ---
+            startTime = nil
+            totalKeystrokes = 0
+            wpm = 0
+            accuracy = 100
+            
+            // Nullstill bonus
+            bonusCoinsWPM = 0
+            bonusCoinsAccuracy = 0
+        }
 }

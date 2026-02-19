@@ -82,16 +82,18 @@ struct UnifiedGameView: View {
                     // --- SPILLOMRÅDE ---
                     TypingAreaView(engine: engine, theme: currentTheme, geometry: geometry, isPhone: isPhone)
                     
-                    // Viser statistikk når ferdig
-                    if engine.isCompleted {
-                        LevelCompleteView(
-                            theme: currentTheme,
-                            wpm: engine.wpm,           // Sørger for at WPM vises
-                            accuracy: engine.accuracy, // Sørger for at nøyaktighet vises
-                            onReset: engine.reset,
-                            onNext: engine.nextLevel
-                        )
-                    }
+                    // Viser statistikk og bonus når ferdig
+                                        if engine.isCompleted {
+                                            LevelCompleteView(
+                                                theme: currentTheme,
+                                                wpm: engine.wpm,
+                                                accuracy: engine.accuracy,
+                                                bonusWPM: engine.bonusCoinsWPM,       // Sørger for at bonus for OPM vises
+                                                bonusAccuracy: engine.bonusCoinsAccuracy, // Sørger for at bonus for nøyaktighet vises
+                                                onReset: engine.reset,
+                                                onNext: engine.nextLevel
+                                            )
+                                        }
 
                     Spacer()
                     

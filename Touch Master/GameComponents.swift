@@ -38,64 +38,146 @@ struct CoinCounterView: View {
 
 struct LevelCompleteView: View {
     let theme: AppTheme
-    // NYE PARAMETERE
     let wpm: Int
     let accuracy: Int
+    
+    // NYE PARAMETERE FOR BONUS
+    let bonusWPM: Int
+    let bonusAccuracy: Int
     
     let onReset: () -> Void
     let onNext: () -> Void
     
+    var isLightTheme: Bool {
+        ["candy", "rainbow"].contains(theme.id)
+    }
+    
     var body: some View {
-        VStack(spacing: 20) {
-            Text("FERDIG!")
-                .font(.title)
-                .foregroundColor(theme.activeColor)
-                .padding()
-                .background(Color.black.opacity(0.8).cornerRadius(10))
-                .overlay(RoundedRectangle(cornerRadius: 10).stroke(theme.activeColor, lineWidth: 2))
-            
-            // NY STATISTIKK-VISNING
-            HStack(spacing: 30) {
-                VStack {
-                    Text("\(wpm)")
-                        .font(.system(size: 40, weight: .bold, design: .monospaced))
-                        .foregroundColor(.white)
-                    Text("OPM")
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                }
-                
-                VStack {
-                    Text("\(accuracy)%")
-                        .font(.system(size: 40, weight: .bold, design: .monospaced))
-                        .foregroundColor(accuracy > 90 ? .green : .orange)
-                    Text("NØYAKTIGHET")
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                }
+        VStack(spacing: 25) {
+            // --- HEADER ---
+            HStack(spacing: 15) {
+                Image(systemName: "star.fill")
+                Text("NIVÅ FULLFØRT!")
+                    .font(.system(size: 26, weight: .heavy, design: theme.fontDesign))
+                Image(systemName: "star.fill")
             }
-            .padding()
-            .background(Color.black.opacity(0.6))
-            .cornerRadius(15)
+            .foregroundColor(theme.activeColor)
+            .padding(.top, 10)
             
+            // --- STATISTIKK OG BONUS KORT ---
             HStack(spacing: 20) {
+                // OPM Kort
+                StatCard(
+                    title: "OPM",
+                    value: "\(wpm)",
+                    bonus: bonusWPM,
+                    theme: theme
+                )
+                
+                // Nøyaktighet Kort
+                StatCard(
+                    title: "NØYAKTIGHET",
+                    value: "\(accuracy)%",
+                    bonus: bonusAccuracy,
+                    theme: theme,
+                    isValueGood: accuracy >= 90
+                )
+            }
+            
+            // --- TOTAL BONUS OPPSUMMERING ---
+            let totalBonus = bonusWPM + bonusAccuracy
+            if totalBonus > 0 {
+                HStack {
+                    Image(systemName: "dollarsign.circle.fill")
+                        .font(.title2)
+                    Text("+\(totalBonus) BONUS MYNTER")
+                        .font(.headline.bold())
+                }
+                .foregroundColor(.yellow)
+                .padding(.vertical, 5)
+            }
+            
+            // --- KNAPPER ---
+            HStack(spacing: 15) {
                 Button(action: onReset) {
                     Image(systemName: "arrow.counterclockwise")
-                        .padding()
-                        .background(theme.kbdKeyFill.opacity(0.9))
-                        .cornerRadius(8)
+                        .font(.title2.bold())
+                        .frame(width: 60, height: 60)
+                        .background(theme.kbdKeyFill)
                         .foregroundColor(theme.textColor)
+                        .cornerRadius(15)
+                        .overlay(RoundedRectangle(cornerRadius: 15).stroke(theme.kbdBorder.opacity(0.5), lineWidth: 1))
                 }
                 
-                Button("FORTSETT") { onNext() }
-                    .font(.headline)
-                    .padding()
+                Button(action: onNext) {
+                    HStack {
+                        Text("NESTE NIVÅ")
+                            .font(.headline.bold())
+                        Image(systemName: "arrow.right")
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: 60)
                     .background(theme.activeColor)
-                    .foregroundColor(theme.id == "cyber" || theme.id == "matrix" ? .black : .white)
-                    .cornerRadius(8)
+                    .foregroundColor(["cyber", "matrix"].contains(theme.id) ? .black : .white)
+                    .cornerRadius(15)
+                    .shadow(color: theme.activeColor.opacity(0.5), radius: 5, x: 0, y: 3)
+                }
             }
+            .padding(.top, 10)
         }
-        .padding() // Litt ekstra luft rundt hele boksen
+        .padding(30)
+        .background(
+            RoundedRectangle(cornerRadius: 25)
+                .fill(isLightTheme ? Color.white.opacity(0.95) : Color.black.opacity(0.85))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 25)
+                .stroke(theme.activeColor.opacity(0.6), lineWidth: 2)
+        )
+        .shadow(color: theme.activeColor.opacity(0.2), radius: 20, x: 0, y: 10)
+        .padding(.horizontal, 40)
+    }
+}
+
+// Nytt sub-view for å gjøre tallene ryddigere
+struct StatCard: View {
+    let title: String
+    let value: String
+    let bonus: Int
+    let theme: AppTheme
+    var isValueGood: Bool = true
+    
+    var isLightTheme: Bool {
+        ["candy", "rainbow"].contains(theme.id)
+    }
+    
+    var body: some View {
+        VStack(spacing: 8) {
+            Text(title)
+                .font(.system(size: 14, weight: .bold, design: theme.fontDesign))
+                .foregroundColor(theme.textColor.opacity(0.8))
+            
+            Text(value)
+                .font(.system(size: 38, weight: .heavy, design: .monospaced))
+                .foregroundColor(isValueGood ? theme.activeColor : .orange)
+            
+            // Viser hvor mange mynter man fikk for denne staten
+            HStack(spacing: 4) {
+                Image(systemName: "plus.circle.fill")
+                    .font(.caption)
+                Text("\(bonus)")
+                    .font(.subheadline.bold())
+            }
+            .foregroundColor(bonus > 0 ? .yellow : .gray.opacity(0.5))
+            .padding(.top, 5)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 20)
+        .background(theme.kbdKeyFill.opacity(isLightTheme ? 0.5 : 0.8))
+        .cornerRadius(15)
+        .overlay(
+            RoundedRectangle(cornerRadius: 15)
+                .stroke(theme.kbdBorder.opacity(0.3), lineWidth: 1)
+        )
     }
 }
 
@@ -150,7 +232,7 @@ struct TypingAreaView: View {
             if theme.id == "rainbow" { return getRainbowColor(at: index) }
             return theme.activeColor
         }
-        else { return theme.textColor }
+        else { return theme.fadedColor }
     }
 }
 

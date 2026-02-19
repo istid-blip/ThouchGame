@@ -34,7 +34,7 @@ struct ConnectionHelpView: View {
                     
                     Text("KOBLE TASTATUR")
                         .font(.system(size: 30, weight: .heavy, design: theme.fontDesign))
-                        .foregroundColor(theme.textColor)
+                        .foregroundColor(theme.textColor.opacity(0.7))
                         .multilineTextAlignment(.center)
                 }
                 
@@ -42,13 +42,28 @@ struct ConnectionHelpView: View {
                 ScrollView {
                     VStack(spacing: 25) {
                         
-                        // Steg 1: Bluetooth
+                        // Steg 1: Bluetooth med integrert knapp
                         InfoCard(
                             icon: "antenna.radiowaves.left.and.right",
                             title: "Bluetooth",
                             text: "1. Slå på tastaturet ditt.\n2. Sett det i 'Pairing Mode'.\n3. Gå til Innstillinger > Bluetooth.",
                             theme: theme
-                        )
+                        ) {
+                            Link(destination: URL(string: "App-Prefs:root=Bluetooth")!) {
+                                HStack {
+                                    Image(systemName: "gear")
+                                    Text("ÅPNE BLUETOOTH")
+                                }
+                                .font(.subheadline.bold())
+                                .padding(.vertical, 10)
+                                .padding(.horizontal, 15)
+                                .frame(maxWidth: .infinity)
+                                .background(theme.activeColor)
+                                .foregroundColor(theme.id == "cyber" || theme.id == "matrix" ? .black : .white)
+                                .cornerRadius(10)
+                            }
+                            .padding(.top, 10)
+                        }
                         
                         // Steg 2: Kabel
                         InfoCard(
@@ -70,34 +85,33 @@ struct ConnectionHelpView: View {
                 }
                 
                 Spacer()
-                
-                // --- KNAPP TIL INNSTILLINGER ---
-                Link(destination: URL(string: UIApplication.openSettingsURLString)!) {
-                    HStack {
-                        Image(systemName: "gear")
-                        Text("ÅPNE INNSTILLINGER")
-                    }
-                    .font(.headline)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(theme.activeColor)
-                    // Sikrer at teksten på knappen alltid er lesbar mot den aktive fargen
-                    .foregroundColor(theme.id == "cyber" || theme.id == "matrix" ? .black : .white)
-                    .cornerRadius(15)
-                }
-                .padding(.horizontal, 40)
-                .padding(.bottom, 30)
             }
         }
     }
 }
 
-// Hjelpe-view for boksene med tekst
-struct InfoCard: View {
+// Hjelpe-view for boksene med tekst, oppdatert for å støtte valgfritt innhold
+struct InfoCard<Content: View>: View {
     let icon: String
     let title: String
     let text: String
     let theme: AppTheme
+    let extraContent: Content
+    
+    // Tillater kort med og uten ekstra innhold (knapper)
+    init(
+        icon: String,
+        title: String,
+        text: String,
+        theme: AppTheme,
+        @ViewBuilder extraContent: () -> Content = { EmptyView() }
+    ) {
+        self.icon = icon
+        self.title = title
+        self.text = text
+        self.theme = theme
+        self.extraContent = extraContent()
+    }
     
     // Sjekk om temaet er lyst eller mørkt
     var isLightTheme: Bool {
@@ -114,23 +128,23 @@ struct InfoCard: View {
             VStack(alignment: .leading, spacing: 5) {
                 Text(title.uppercased())
                     .font(.headline)
-                    // FIX: Tvinger sort tekst på lyse temaer, hvit på mørke
                     .foregroundColor(isLightTheme ? .black.opacity(0.9) : .white.opacity(0.9))
                 
                 Text(text)
                     .font(.body)
-                    // FIX: Samme her, sikrer høy kontrast
                     .foregroundColor(isLightTheme ? .black.opacity(0.7) : .white.opacity(0.7))
                     .fixedSize(horizontal: false, vertical: true)
+                
+                // Viser knappen hvis den er lagt til
+                extraContent
             }
             Spacer()
         }
         .padding()
-        // FIX: Bakgrunnen til boksen tilpasser seg nå for å gi kontrast
         .background(
             isLightTheme
-            ? Color.white.opacity(0.85) // Lyst tema = nesten hvit boks
-            : Color.black.opacity(0.5)  // Mørkt tema = mørk boks
+            ? Color.white.opacity(0.85)
+            : Color.black.opacity(0.5)
         )
         .cornerRadius(12)
         .overlay(
