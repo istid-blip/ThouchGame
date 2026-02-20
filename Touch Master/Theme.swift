@@ -68,5 +68,5 @@ struct AppTheme: Identifiable {
     )
     
     // Listen som ContentView ser etter:
-    static let allThemes = [cyber, candy, matrix, rainbow]
+    static let allThemes = [cyber, candy, matrix]
 }

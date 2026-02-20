@@ -92,8 +92,8 @@ struct FJIconView: View {
         ZStack {
             LinearGradient(
                 gradient: Gradient(colors: [
-                    Color(red: 0.18, green: 0.18, blue: 0.19), // Litt lysere øverst
-                    Color(red: 0.09, green: 0.09, blue: 0.10)  // Nesten sort nederst
+                    Color(red: 0.18, green: 0.18, blue: 0.27),
+                    AppTheme.cyber.background                  // Cyber-temaets hovedbakgrunn (0.05, 0.05, 0.1) i bunn
                 ]),
                 startPoint: .topLeading,     // Starter oppe til venstre
                 endPoint: .bottomTrailing    // Slutter nede til høyre
@@ -116,9 +116,11 @@ struct KeyboardKeyView: View {
     let letter: String
     let hasBump: Bool
     
-    let keyTopColor = Color(red: 0.25, green: 0.26, blue: 0.28)
-    let keyBottomColor = Color(red: 0.20, green: 0.21, blue: 0.23)
-    let textColor = Color(white: 0.9)
+    // Henter farger fra cyber-temaet
+    let keyTopColor = Color(red: 0.25, green: 0.26, blue: 0.32)
+    let keyBottomColor = Color(red: 0.20, green: 0.21, blue: 0.27)
+    let textColor = AppTheme.cyber.activeColor
+
     
     var body: some View {
         GeometryReader { geometry in
@@ -137,6 +139,7 @@ struct KeyboardKeyView: View {
                     )
                     .overlay(
                         RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                       
                             .stroke(Color.white.opacity(0.15), lineWidth: size * 0.02)
                             .padding(size * 0.01)
                             .mask(
@@ -161,17 +164,11 @@ struct KeyboardKeyView: View {
                 }
             }
             // 1. Vi låser størrelsen på selve tasten til å være kvadratisk
-                        .frame(width: size, height: size)
+            .frame(width: size, height: size)
                         
-                        // 2. Vi ber denne kvadratiske tasten om å midtstille seg i all tilgjengelig plass
-                        .frame(width: geometry.size.width, height: geometry.size.height)
+            // 2. Vi ber denne kvadratiske tasten om å midtstille seg i all tilgjengelig plass
+            .frame(width: geometry.size.width, height: geometry.size.height)
         }
         .aspectRatio(1, contentMode: .fit)
-    }
-}
-
-struct ExportView_Previews: PreviewProvider {
-    static var previews: some View {
-        ExportView()
     }
 }

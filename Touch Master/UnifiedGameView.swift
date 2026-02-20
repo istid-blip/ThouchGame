@@ -107,7 +107,9 @@ struct UnifiedGameView: View {
                             onKeyPress: { key in engine.checkInput(key) }
                         )
                         .scaleEffect(fitScale(size: geometry.size))
-                        .frame(width: geometry.size.width)
+                        .frame(width: geometry.size.width,
+                               height: 300 * fitScale(size: geometry.size)
+                        )
                         .padding(.bottom, 10)
                     }
                 }
@@ -161,11 +163,23 @@ struct UnifiedGameView: View {
     }
     
     func fitScale(size: CGSize) -> CGFloat {
-        let keyboardBaseWidth: CGFloat = 850.0
-        let keyboardBaseHeight: CGFloat = 300.0
-        let widthScale = size.width / keyboardBaseWidth
-        let maxVerticalSpace = isPhone ? 0.55 : 0.8
-        let heightScale = (size.height * maxVerticalSpace) / keyboardBaseHeight
-        return min(widthScale, heightScale)
-    }
+            let keyboardBaseWidth: CGFloat = 850.0
+            let keyboardBaseHeight: CGFloat = 300.0
+            let widthScale = size.width / keyboardBaseWidth
+            
+            // Sjekker om skjermen er i landskapsmodus
+            let isLandscape = size.width > size.height
+            
+            // Gir hver enhet og orientering riktig maksimal høyde
+            let maxVerticalSpace: CGFloat
+            if isPhone {
+                // iPhone trenger å krympe tastaturet mye mer i landskap
+                maxVerticalSpace = isLandscape ? 0.50 : 0.55
+            } else {
+                maxVerticalSpace = isLandscape ? 0.50 : 0.8
+            }
+            
+            let heightScale = (size.height * maxVerticalSpace) / keyboardBaseHeight
+            return min(widthScale, heightScale)
+        }
 }
