@@ -126,7 +126,8 @@ struct LevelCompleteView: View {
                                 .font(.headline.bold())
                             Image(systemName: "arrow.right")
                         }
-                        .frame(maxWidth: .infinity, maxHeight: isLandscape ? 55 : 60)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: isLandscape ? 55 : 60)
                         .background(theme.activeColor)
                         .foregroundColor(["cyber", "matrix"].contains(theme.id) ? .black : .white)
                         .cornerRadius(15)
