@@ -26,13 +26,36 @@ enum GameMode {
 class TypingGameEngine: ObservableObject {
     // --- LEVELS DATA ---
     let trainingLevels = [
-        Level(id: 1, title: "Pekefingre", text: "f j f j j f j f"),
-        Level(id: 2, title: "Langfingre", text: "d k d k k d k d"),
-        Level(id: 3, title: "Ringfingre", text: "s l s l l s l s"),
-        Level(id: 4, title: "Lillefingre", text: "a ø a ø ø a ø a"),
-        Level(id: 5, title: "Hjem-raden", text: "asdf jklø"),
-        Level(id: 6, title: "Små ord", text: "sjø dal laks flak")
-    ]
+            // DEL 1: Hjem-raden (Grunnposisjon)
+            Level(id: 1, title: "Pekefingre (og tommelfinger)", text: "f j f j j f j f"),
+            Level(id: 2, title: "Langfingre (og tommelfinger)", text: "d k d k k d k d"),
+            Level(id: 3, title: "Ringfingre (og tommelfinger)", text: "s l s l l s l s"),
+            Level(id: 4, title: "Lillefingre (og tommelfinger)", text: "a ø a ø ø a ø a"),
+            Level(id: 5, title: "Hjem-raden", text: "asdf jklø"),
+            Level(id: 6, title: "Pekefingre strekk (G og H)", text: "f g f j h j f g f j h j"),
+            Level(id: 7, title: "Lillefinger strekk (Æ)", text: "ø æ ø a æ a ø æ ø"),
+            Level(id: 8, title: "Ord på hjem-raden", text: "sjø dal laks flak halm hage glass"),
+            
+            // DEL 2: Øvre rad
+            Level(id: 9, title: "Øvre rad - Pekefingre (R, T, U, Y)", text: "f r f j u j f t f j y j"),
+            Level(id: 10, title: "Øvre rad - Langfingre (E, I)", text: "d e d k i k d e d k i k"),
+            Level(id: 11, title: "Øvre rad - Ringfingre (W, O)", text: "s w s l o l s w s l o l"),
+            Level(id: 12, title: "Øvre rad - Lillefingre (Q, P, Å)", text: "a q a ø p ø æ å æ"),
+            Level(id: 13, title: "Ord med øvre rad", text: "tre rute purre type kopi stål"),
+            
+            // DEL 3: Nedre rad
+            Level(id: 14, title: "Nedre rad - Pekefingre (V, B, M, N)", text: "f v f j m j f b f j n j"),
+            Level(id: 15, title: "Nedre rad - Langfingre (C, ,)", text: "d c d k , k d c d k , k"),
+            Level(id: 16, title: "Nedre rad - Ringfingre (X, .)", text: "s x s l . l s x s l . l"),
+            Level(id: 17, title: "Nedre rad - Lillefinger (Z, -)", text: "a z a ø - ø a z a ø - ø"),
+            Level(id: 18, title: "Ord med nedre rad", text: "sykkel vindu paraply zoo max"),
+            
+            // DEL 4: Avansert og flyt
+            Level(id: 19, title: "Korte setninger", text: "jeg vil ha is. du er god."),
+            Level(id: 20, title: "Store bokstaver (Shift)", text: "Per og Kari. Harstad er bra."),
+            Level(id: 21, title: "Blandet praksis", text: "Kjappe rever hopper over late hunder."),
+            Level(id: 22, title: "Mesterprøven", text: "Touchmetoden gjør meg raskere og mer effektiv!")
+        ]
     
     @Published var storyLevels: [Level] = []
     

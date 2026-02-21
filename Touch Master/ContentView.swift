@@ -12,17 +12,17 @@ struct ContentView: View {
         if let mode = selectedMode {
             switch mode {
             case .training, .story:
-                            // HER ER ENDRINGEN:
-                            // Både story og training bruker nå samme UnifiedGameView.
-                            // Vi sender med 'mode' variablen så visningen vet hva den skal vise.
-                            UnifiedGameView(
-                                mode: mode,
-                                theme: currentTheme,
-                                onBack: { selectedMode = nil }
-                            )
-            case .help: //
-                            ConnectionHelpView(theme: currentTheme, onBack: { selectedMode = nil })
-                        }
+                // HER ER ENDRINGEN:
+                // Både story og training bruker nå samme UnifiedGameView.
+                // Vi sender med 'mode' variablen så visningen vet hva den skal vise.
+                UnifiedGameView(
+                    mode: mode,
+                    theme: currentTheme,
+                    onBack: { selectedMode = nil }
+                )
+            case .help:
+                ConnectionHelpView(theme: currentTheme, onBack: { selectedMode = nil })
+            }
             
         } else {
             ZStack {
@@ -81,12 +81,49 @@ struct ContentView: View {
                     .padding(.bottom, 10)
                     
                     Text("© 2026 Frode Halrynjo")
-                                            .font(.caption) // Liten skrift
-                                            .foregroundColor(currentTheme.textColor.opacity(0.7)) // Diskret farge
-                                            .padding(.bottom, 20) // Litt luft i bunnen av skjermen
+                        .font(.caption) // Liten skrift
+                        .foregroundColor(currentTheme.textColor.opacity(0.7)) // Diskret farge
+                        .padding(.bottom, 20) // Litt luft i bunnen av skjermen
                 }
+                
             }
             .transition(.opacity)
+            .onAppear {
+                            // Lås til portrett på iPhone når hovedmenyen vises
+                            if UIDevice.current.userInterfaceIdiom == .phone {
+                                AppDelegate.orientationLock = .portrait
+                                
+                                if #available(iOS 16.0, *) {
+                                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                                        // 1. Gi iOS beskjed umiddelbart om at reglene for rotering er endret (Fjerner glitchen!)
+                                        windowScene.windows.first?.rootViewController?.setNeedsUpdateOfSupportedInterfaceOrientations()
+                                        
+                                        // 2. Tving skjermen tilbake til portrett hvis den allerede ligger sidelengs
+                                        windowScene.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
+                                    }
+                                } else {
+                                    // Fallback for iPhone med iOS 15 eller eldre
+                                    UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
+                                    UINavigationController.attemptRotationToDeviceOrientation()
+                                }
+                            }
+                        }
+            .onDisappear {
+                            // Åpne for landskapsmodus igjen når vi forlater menyen
+                            if UIDevice.current.userInterfaceIdiom == .phone {
+                                AppDelegate.orientationLock = .all
+                                
+                                // Gi iOS beskjed om at reglene for rotering har endret seg
+                                if #available(iOS 16.0, *) {
+                                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                                        windowScene.windows.first?.rootViewController?.setNeedsUpdateOfSupportedInterfaceOrientations()
+                                    }
+                                } else {
+                                    // Fallback for iOS 15 og eldre
+                                    UINavigationController.attemptRotationToDeviceOrientation()
+                                }
+                            }
+                        }
         }
     }
     
