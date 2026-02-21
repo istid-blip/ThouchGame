@@ -40,8 +40,6 @@ struct LevelCompleteView: View {
     let theme: AppTheme
     let wpm: Int
     let accuracy: Int
-    
-    // NYE PARAMETERE FOR BONUS
     let bonusWPM: Int
     let bonusAccuracy: Int
     
@@ -52,89 +50,107 @@ struct LevelCompleteView: View {
         ["candy", "rainbow"].contains(theme.id)
     }
     
-    var body: some View {
-        VStack(spacing: 25) {
-            // --- HEADER ---
-            HStack(spacing: 15) {
-                Image(systemName: "star.fill")
-                Text("NIVÅ FULLFØRT!")
-                    .font(.system(size: 26, weight: .heavy, design: theme.fontDesign))
-                Image(systemName: "star.fill")
-            }
-            .foregroundColor(theme.activeColor)
-            .padding(.top, 10)
-            
-            // --- STATISTIKK OG BONUS KORT ---
-            HStack(spacing: 20) {
-                // OPM Kort
-                StatCard(
-                    title: "OPM",
-                    value: "\(wpm)",
-                    bonus: bonusWPM,
-                    theme: theme
-                )
-                
-                // Nøyaktighet Kort
-                StatCard(
-                    title: "NØYAKTIGHET",
-                    value: "\(accuracy)%",
-                    bonus: bonusAccuracy,
-                    theme: theme,
-                    isValueGood: accuracy >= 90
-                )
-            }
-            
-            // --- TOTAL BONUS OPPSUMMERING ---
-            let totalBonus = bonusWPM + bonusAccuracy
-            if totalBonus > 0 {
-                HStack {
-                    Image(systemName: "dollarsign.circle.fill")
-                        .font(.title2)
-                    Text("+\(totalBonus) BONUS MYNTER")
-                        .font(.headline.bold())
-                }
-                .foregroundColor(.yellow)
-                .padding(.vertical, 5)
-            }
-            
-            // --- KNAPPER ---
-            HStack(spacing: 15) {
-                Button(action: onReset) {
-                    Image(systemName: "arrow.counterclockwise")
-                        .font(.title2.bold())
-                        .frame(width: 60, height: 60)
-                        .background(theme.kbdKeyFill)
-                        .foregroundColor(theme.textColor)
-                        .cornerRadius(15)
-                        .overlay(RoundedRectangle(cornerRadius: 15).stroke(theme.kbdBorder.opacity(0.5), lineWidth: 1))
-                }
-                
-                Button(action: onNext) {
-                    HStack {
-                        Text("NESTE NIVÅ")
-                            .font(.headline.bold())
-                        Image(systemName: "arrow.right")
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: 60)
-                    .background(theme.activeColor)
-                    .foregroundColor(["cyber", "matrix"].contains(theme.id) ? .black : .white)
-                    .cornerRadius(15)
-                    .shadow(color: theme.activeColor.opacity(0.5), radius: 5, x: 0, y: 3)
-                }
-            }
-            .padding(.top, 10)
+    var isPhone: Bool { UIDevice.current.userInterfaceIdiom == .phone }
+    
+    // Oppdatert skaleringsfunksjon som tar hensyn til landskapsmodus
+    func fitScale(size: CGSize, isLandscape: Bool) -> CGFloat {
+        // Bredere base i landskap, og litt smalere base-høyde
+        let viewBaseWidth: CGFloat = isLandscape ? 480.0 : 350.0
+        let viewBaseHeight: CGFloat = isLandscape ? 300.0 : 450.0
+        
+        let widthScale = size.width / viewBaseWidth
+        
+        let maxVerticalSpace: CGFloat
+        if isPhone {
+            maxVerticalSpace = isLandscape ? 0.85 : 0.60
+        } else {
+            maxVerticalSpace = isLandscape ? 0.70 : 0.60
         }
-        .padding(30)
-        .background(
-            RoundedRectangle(cornerRadius: 25)
-                .fill(isLightTheme ? Color.white.opacity(0.95) : Color.black.opacity(0.85))
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 25)
-                .stroke(theme.activeColor.opacity(0.6), lineWidth: 2)
-        )
-        .shadow(color: theme.activeColor.opacity(0.2), radius: 20, x: 0, y: 10)
-        .padding(.horizontal, 40)
+        
+        let heightScale = (size.height * maxVerticalSpace) / viewBaseHeight
+        let finalScale = min(widthScale, heightScale)
+        
+        return min(finalScale, 1.2)
+    }
+    
+    var body: some View {
+        GeometryReader { geo in
+            // Sjekker om vi er i landskapsmodus basert på skjermstørrelsen
+            let isLandscape = geo.size.width > geo.size.height
+            
+            VStack(spacing: isLandscape ? 12 : 25) { // Krymper avstand i høyden
+                // --- HEADER ---
+                HStack(spacing: 15) {
+                    Image(systemName: "star.fill")
+                    Text("NIVÅ FULLFØRT!")
+                        .font(.system(size: 26, weight: .heavy, design: theme.fontDesign))
+                    Image(systemName: "star.fill")
+                }
+                .foregroundColor(theme.activeColor)
+                .padding(.top, isLandscape ? 5 : 10)
+                
+                // --- STATISTIKK KORT ---
+                HStack(spacing: isLandscape ? 30 : 20) { // Gir kortene mer pusterom i bredden
+                    StatCard(title: "OPM", value: "\(wpm)", bonus: bonusWPM, theme: theme)
+                    StatCard(title: "NØYAKTIGHET", value: "\(accuracy)%", bonus: bonusAccuracy, theme: theme, isValueGood: accuracy >= 90)
+                }
+                
+                // --- TOTAL BONUS OPPSUMMERING ---
+                let totalBonus = bonusWPM + bonusAccuracy
+                if totalBonus > 0 {
+                    HStack {
+                        Image(systemName: "dollarsign.circle.fill")
+                            .font(.title2)
+                        Text("+\(totalBonus) BONUS MYNTER")
+                            .font(.headline.bold())
+                    }
+                    .foregroundColor(.yellow)
+                    .padding(.vertical, isLandscape ? 2 : 5)
+                }
+                
+                // --- KNAPPER ---
+                HStack(spacing: 15) {
+                    Button(action: onReset) {
+                        Image(systemName: "arrow.counterclockwise")
+                            .font(.title2.bold())
+                            .frame(width: isLandscape ? 55 : 60, height: isLandscape ? 55 : 60)
+                            .background(theme.kbdKeyFill)
+                            .foregroundColor(theme.textColor)
+                            .cornerRadius(15)
+                            .overlay(RoundedRectangle(cornerRadius: 15).stroke(theme.kbdBorder.opacity(0.5), lineWidth: 1))
+                    }
+                    
+                    Button(action: onNext) {
+                        HStack {
+                            Text("NESTE NIVÅ")
+                                .font(.headline.bold())
+                            Image(systemName: "arrow.right")
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: isLandscape ? 55 : 60)
+                        .background(theme.activeColor)
+                        .foregroundColor(["cyber", "matrix"].contains(theme.id) ? .black : .white)
+                        .cornerRadius(15)
+                        .shadow(color: theme.activeColor.opacity(0.5), radius: 5, x: 0, y: 3)
+                    }
+                }
+                .padding(.top, isLandscape ? 5 : 10)
+            }
+            .padding(isLandscape ? 10 : 30) // Litt strammere padding
+            // Her gjør vi selve rammen bredere hvis skjermen er lagt sidelengs
+            .frame(width: isLandscape ? 600 : 350)
+            .background(
+                RoundedRectangle(cornerRadius: 25)
+                    .fill(isLightTheme ? Color.white.opacity(0.95) : Color.black.opacity(0.85))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 25)
+                    .stroke(theme.activeColor.opacity(0.6), lineWidth: 2)
+            )
+            .shadow(color: theme.activeColor.opacity(0.2), radius: 20, x: 0, y: 10)
+            // Sender isLandscape inn i funksjonen for riktige utregninger
+            .scaleEffect(fitScale(size: geo.size, isLandscape: isLandscape))
+            .position(x: geo.size.width / 2, y: geo.size.height / 2)
+        }
     }
 }
 
